@@ -3,24 +3,20 @@
 import React from 'react';
 import Hello from '../../src/components/Hello.jsx';
 import chai from 'chai';
-import spies  from 'chai-spies';
-import {shallow} from 'enzyme';
+import chaiEnzyme from 'chai-enzyme';
+import {mount} from 'enzyme';
+import jsdomGlobal from 'jsdom-global';
 
+jsdomGlobal();
 chai.should();
-chai.use(spies);
+chai.use(chaiEnzyme());
 
 describe('<Hello />', () => {
 
   it('shows fruit names', () => {
-    const wrapper = shallow(<Hello fruit={['AAA', 'BBB']}/>);
-    wrapper.contains('AAA').should.be.true;
-    wrapper.contains('BBB').should.be.true;
+    const wrapper = mount(<Hello fruit={['AAA', 'BBB']}/>);
+    wrapper.should.contain.text('AAA');
+    wrapper.should.contain.text('BBB');
   });
 
-  it('calls onFruitDelete if deletes a fruit', () => {
-    const spy = chai.spy();
-    const wrapper = shallow(<Hello fruit={['AAA', 'BBB']} onDeleteFruit={spy}/>);
-    wrapper.find('button[title="delete"]').first().simulate('click');
-    spy.should.have.been.called.with('AAA');
-  })
 });
